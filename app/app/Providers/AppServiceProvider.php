@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Contracts\ICalculateService;
+use App\Http\Services\CalculateService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        return [
+            ICalculateService::class
+        ];
     }
 
     /**
@@ -23,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind(ICalculateService::class, CalculateService::class);
     }
 }
