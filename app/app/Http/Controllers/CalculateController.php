@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Contracts\ICalculateService;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,34 +20,44 @@ class CalculateController extends Controller
     {
     }
 
-
-    public function sumDistance(Request $request)
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sumDistance(Request $request) : JsonResponse
     {
-        $validator = $this->validatesumDistanceRequest($request);
+        $validator = $this->validateSumDistanceRequest($request);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->first()], 403);
+            return response()->json(['error' => $validator->errors()->first()], 400);
         }
 
-        return number_format(
-            $this->calculateService->sumDistance(
-                $request->get('firstDistance'),
-                $request->get('firstType'),
-                $request->get('secondDistance'),
-                $request->get('secondType'),
-                $request->get('returnType')
-            ), 2
-        );
+        try{
+            return response()->json([
+                    'data' => number_format(
+                        $this->calculateService->sumDistance(
+                            $request->get('first_distance'),
+                            $request->get('first_type'),
+                            $request->get('second_distance'),
+                            $request->get('second_type'),
+                            $request->get('return_type')
+                        ), 2
+                    )
+                ]);
+        }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+
 
     }
 
-    protected function validatesumDistanceRequest(Request $request)
+    protected function validateSumDistanceRequest(Request $request)
     {
         return Validator::make($request->all(), [
-            'firstDistance' => 'required|numeric',
-            'firstType' => 'required|in:meters,yards',
-            'secondDistance' => 'required|numeric',
-            'secondType' => 'required|in:meters,yards',
-            'returnType' => 'required|in:meters,yards',
+            'first_distance' => 'required|numeric',
+            'first_type' => 'required|in:meters,yards',
+            'second_distance' => 'required|numeric',
+            'second_type' => 'required|in:meters,yards',
+            'return_type' => 'required|in:meters,yards',
         ]);
     }
 

@@ -14,9 +14,14 @@ class CalculateService implements ICalculateService
      * @param string $secondType
      * @param string $returnType
      * @return float
+     * @throws \Exception
      */
     public function sumDistance(float $firstDistance, string $firstType, float $secondDistance, string $secondType, string $returnType): float
     {
+        if($firstDistance < 0 || $secondDistance < 0){
+            throw new \Exception("Negative distances are invalid");
+        }
+
         return
             $this->convert($firstType, $returnType, $firstDistance) +
             $this->convert($secondType, $returnType, $secondDistance);

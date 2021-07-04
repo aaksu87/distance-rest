@@ -1,0 +1,66 @@
+swagger: "2.0"
+info:
+  description: "Distance Rest Api"
+  version: "1.0.0."
+  title: "Distance"
+host: "localhost:8080"
+basePath: "/api"
+tags:
+  - name: "calculate"
+    description: "Calculation Endpoints"
+schemes:
+  - "http"
+paths:
+  /calculate/sum-distance:
+    post:
+      tags:
+        - "calculate"
+      summary: "Calculate sum distance between meters and yards"
+      operationId: "calculate-sum-distance"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Parameters Data"
+          required: true
+          schema:
+            $ref: "#/definitions/Parameters"
+      responses:
+        "200":
+          description: "Successful response"
+
+definitions:
+  Parameters:
+    type: "object"
+    required:
+      - "first_distance"
+      - "first_type"
+      - "second_distance"
+      - "second_type"
+      - "return_type"
+    properties:
+      first_distance:
+        type: "number"
+        example: 1.3
+      first_type:
+        type: "string"
+        enum:
+          - "meters"
+          - "yards"
+        example: "meters"
+      second_distance:
+        type: "number"
+        example: 2.5
+      second_type:
+        type: "string"
+        enum:
+          - "meters"
+          - "yards"
+        example: "yards"
+      return_type:
+        type: "string"
+        enum:
+          - "meters"
+          - "yards"
+        example: "yards"
